@@ -24,7 +24,7 @@ list_checkpoints_as_step=("step143000")
 # "step110000", "step120000", "step130000", \
 # "step140000", "step143000")
 
-caption_file_names=("captions_test.pkl")
+caption_file_names=("/scratch/yota/LLM-encoding-model-FU/data/nsd_captions/subj01_captions_train.pkl")
 # caption_data_dir="/scratch/yota/LLM-encoding-model-FU/data/nsd_captions"
 # caption_file_names=("$caption_data_dir"/*.pkl)
 
@@ -48,6 +48,4 @@ for caption_file_name in "${caption_file_names[@]}"; do
             submit_run_single_model_extraction.sh
         done
     done
-
-
-
+done
