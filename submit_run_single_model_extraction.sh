@@ -8,7 +8,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --qos=hiprio
 #SBATCH --partition=gpu
-#SBATCH --time=00:25:00
+#SBATCH --time=00:40:00
 #SBATCH --output=/scratch/yota/sbatch_output/extraction_%j.out
 #SBATCH --error=/scratch/yota/sbatch_error/extraction_%j.err
 
@@ -40,8 +40,7 @@ export MKL_NUM_THREADS=4
     $caption_file_name \
     --num_sentences_per_batch $num_sentences_per_batch \
     --data_dir_path $data_dir_path \
-    2>&1 | tee log_${SLURM_JOB_ID}.txt
+    2>&1 | tee /scratch/yota/sbatch_log/log_${SLURM_JOB_ID}.txt
 
 deactivate 
 module unload Python/3.11.5-GCCcore-13.2.0
-

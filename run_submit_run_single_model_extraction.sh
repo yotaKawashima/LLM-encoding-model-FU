@@ -24,28 +24,22 @@ list_checkpoints_as_step=("step143000")
 # "step110000", "step120000", "step130000", \
 # "step140000", "step143000")
 
-caption_file_names=("/scratch/yota/LLM-encoding-model-FU/data/nsd_captions/subj01_captions_train.pkl")
-# caption_data_dir="/scratch/yota/LLM-encoding-model-FU/data/nsd_captions"
-# caption_file_names=("$caption_data_dir"/*.pkl)
+caption_data_dir="/scratch/yota/LLM-encoding-model-FU/data/nsd_captions"
+caption_file_names=("$caption_data_dir"/*.pkl)
 
 # loop over caption files
 for caption_file_name in "${caption_file_names[@]}"; do
     caption_file_name=$(basename "$caption_file_name")
+    echo $caption_file_name
     # loop over model name 
     for model_name in "${model_names[@]}"; do
-        # loop over checkpoints
+        echo $model_name
+	# loop over checkpoints
         for checkpoint in "${list_checkpoints_as_step[@]}"; do
             # submit the corresponding job            
-            sbatch \
-            --export=model_name=$model_name, \
-            checkpoint=$checkpoint, \
-            model_representation_type=$model_representation_type, \
-            model_representation_summary=$model_representation_summary, \
-            caption_file_name=$caption_file_name, \
-            num_sentences_per_batch=$num_sentences_per_batch, \
-            data_dir_path=$data_dir_path, \
-            working_dir=$working_dir \
-            submit_run_single_model_extraction.sh
+            echo $checkpoint
+	    echo "----"
+	    sbatch --export=model_name=$model_name,checkpoint=$checkpoint,model_representation_type=$model_representation_type,model_representation_summary=$model_representation_summary,caption_file_name=$caption_file_name,num_sentences_per_batch=$num_sentences_per_batch,data_dir_path=$data_dir_path,working_dir=$working_dir ./submit_run_single_model_extraction.sh
         done
     done
 done
