@@ -14,10 +14,16 @@ model_representation_file_name = 'model_representations'
 model_representation_file_extension = '.npy' 
 
 # fmri data
-fmr_dir_name = 'nsd_fmri'
-fmri_dir = os.path.join(data_dir_path, fmr_dir_name)
+fmri_dir_name = 'nsd_fmri'
+fmri_dir = os.path.join(data_dir_path, fmri_dir_name)
 fmri_file_name = 'betas_average_fsaverage'
 fmri_file_extension ='.npy'
+
+# encoding model data
+encoding_model_dir_name = 'encoding_model'
+encoding_model_dir = os.path.join(data_dir_path, encoding_model_dir_name)
+encoding_model_file_name = 'encoding_model'
+encoding_model_file_extension = '.npz'
 
 ## information about model reprentations
 model_representation_type='last_hidden_state' 
@@ -41,7 +47,7 @@ checkpoints.sort()
 checkpoints_as_step = ['step'+str(int(num / 2)) for num in checkpoints]
 
 # regression hyperparameters
-alphas = np.logspace(-6, 6, 13)
+alphas = np.logspace(-3, 3, 7)
 num_folds = 5 
 rois = ['V1', 'V2', 'V3', 'V4']
 
