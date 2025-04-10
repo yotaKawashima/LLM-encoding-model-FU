@@ -3,7 +3,7 @@ working_dir="/scratch/yota/LLM-encoding-model-FU"
 data_dir_path="/scratch/yota/LLM-encoding-model-FU/data"
 model_representation_type="last_hidden_state"
 model_representation_summary="mean"
-use_test_data_for_training="True"
+use_test_data_for_training=false
 
 model_names=("EleutherAI/pythia-410m")
 # model_names=(\

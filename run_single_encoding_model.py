@@ -31,8 +31,7 @@ def main():
     
     # add default arguments
     parser.add_argument('--use_test_data_for_training', \
-                        type=bool, \
-                        default=False, \
+                        action='store_true', \
                         help='To check the implementation, run a use the test data set for the training and testing.')
     parser.add_argument('--data_dir_path', \
                         type=str, \
@@ -84,6 +83,11 @@ def main():
                         help='Number of folds for cross-validation.')
 
     args = parser.parse_args()
+
+    if args.use_test_data_for_training == True:
+        print("use test data for training")
+    else:
+        print("use training data for training")
 
     # model representation data path 
     # Note that the test data is shared across all participants.
