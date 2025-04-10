@@ -49,10 +49,10 @@ def fit_and_predict(fmri_train_path,
     # Make new instances of the linear reg class passed as input
     reg = clone(regression)
 
-    # print("shape of fmri_train: ", fmri_train.shape)
-    # print("shape of fmri_test: ", fmri_test.shape)
-    # print("shape of model_representation_train: ", model_representation_train.shape)
-    # print("shape of model_representation_test: ", model_representation_test.shape)
+    print("shape of fmri_train: ", fmri_train.shape)
+    print("shape of fmri_test: ", fmri_test.shape)
+    print("shape of model_representation_train: ", model_representation_train.shape)
+    print("shape of model_representation_test: ", model_representation_test.shape)
 
     # check if the number of trials in fmri and model representation are the same
     if fmri_train.shape[0] != model_representation_train.shape[0]:
@@ -71,18 +71,15 @@ def fit_and_predict(fmri_train_path,
     reg.fit(model_representation_train, fmri_train_without_nan)
 
     # Keep ridge regression data. 
+    # By default, sklearn score averages coefficient of determination R^2 across all targets (i.e. voxels).
+    # https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RidgeCV.html 
+    # https://scikit-learn.org/stable/modules/generated/sklearn.metrics.r2_score.html#sklearn.metrics.r2_score
     best_alpha = reg.alpha_
-    best_score_train_without_nan = reg.best_score_
-    best_score_train = np.zeros(fmri_train.shape[1])
-    best_score_train[~voxel_with_nan] = best_score_train_without_nan
-    best_score_train[voxel_with_nan] = np.nan # set the voxels with nan to np.nan
+    best_score_train = reg.best_score_
 
     # Use fitted linear regressions to predict the validation fMRI data
-    coeff_determination_without_nan = reg.score(model_representation_test, fmri_test[:, ~voxel_with_nan])
-    coeff_determination = np.zeros(fmri_test.shape[1])
-    coeff_determination[~voxel_with_nan] = coeff_determination_without_nan
-    coeff_determination[voxel_with_nan] = np.nan # set the voxels with nan to np.nan
-
+    coeff_determination = reg.score(model_representation_test, fmri_test[:, ~voxel_with_nan])
+    
     # Predict the test data
     fmri_test_pred_without_nan = reg.predict(model_representation_test)
     fmri_test_pred = np.zeros(fmri_test.shape)
