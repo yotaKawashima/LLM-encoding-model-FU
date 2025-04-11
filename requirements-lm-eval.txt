@@ -1,1 +1,1 @@
--e .
+-e ./third_party/lm-evaluation-harness
