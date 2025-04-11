@@ -4,6 +4,8 @@ from tqdm import tqdm
 import config
 import pandas as pd
 from sklearn.linear_model import RidgeCV, LinearRegression
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
 from sklearn.base import clone
 from scipy.stats import pearsonr
 #from utils.roi_mask import get_roi_mask 
@@ -39,16 +41,29 @@ def fit_and_predict(fmri_train_path,
     # fMRI data: voxel x trial -> trial x voxel 
     fmri_train = np.transpose(np.load(fmri_train_path))
     fmri_test = np.transpose(np.load(fmri_test_path))
+
+    # Normalise fmri data 
+    fmri_train_mean = np.nanmean(fmri_train, axis=0)
+    fmri_train_std = np.nanstd(fmri_train, axis=0)
+    fmri_train = (fmri_train - fmri_train_mean) / fmri_train_std
+    fmri_test = (fmri_test - fmri_train_mean) / fmri_train_std
     
     # Load model representation 
     model_representation_train = \
             np.load(model_representation_train_path)
     model_representation_test = \
             np.load(model_representation_test_path)
-
-    # Make new instances of the linear reg class passed as input
-    reg = clone(regression)
-
+    # Normalise model representation
+    model_representation_train_mean = \
+        np.nanmean(model_representation_train, axis=0)
+    model_representation_train_std = \
+        np.nanstd(model_representation_train, axis=0)
+    model_representation_train = \
+        (model_representation_train - model_representation_train_mean) / model_representation_train_std
+    model_representation_test = \
+        (model_representation_test - model_representation_train_mean) / model_representation_train_std
+    
+    # check if the data is loaded correctly
     print("shape of fmri_train: ", fmri_train.shape)
     print("shape of fmri_test: ", fmri_test.shape)
     print("shape of model_representation_train: ", model_representation_train.shape)
@@ -66,8 +81,9 @@ def fit_and_predict(fmri_train_path,
     if voxel_with_nan.any():
         Warning("There are np.nan in the training fMRI data. ")
         print("The number of voxels with Nan value: ", np.sum(voxel_with_nan))
-
+    
     # Fit linear regressions on the training data
+    reg = clone(regression)
     reg.fit(model_representation_train, fmri_train_without_nan)
 
     # Keep ridge regression data. 
